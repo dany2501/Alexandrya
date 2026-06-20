@@ -1,0 +1,1580 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alexandrya — Visor de diagramas</title>
+<style>
+  :root { --teal:#2aa6a0; --navy:#1f3b63; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:#1a2233; background:#f4f6f9; }
+  header { background:linear-gradient(90deg,var(--navy),var(--teal)); color:#fff; padding:16px 24px; position:sticky; top:0; z-index:10; }
+  header h1 { margin:0; font-size:18px; }
+  header p { margin:4px 0 0; font-size:13px; opacity:.9; }
+  .layout { display:flex; align-items:flex-start; }
+  nav { width:300px; flex:0 0 300px; height:calc(100vh - 64px); overflow:auto; position:sticky; top:64px; background:#fff; border-right:1px solid #e2e8f0; padding:12px; }
+  nav ul { list-style:none; margin:0; padding:0; }
+  nav li { margin:0 0 8px; }
+  nav a { color:var(--navy); text-decoration:none; font-weight:600; font-size:13px; }
+  nav a:hover { color:var(--teal); }
+  nav .cnt { color:#94a3b8; font-weight:400; }
+  nav .path { font-size:11px; color:#94a3b8; }
+  main { flex:1; padding:20px 28px; min-width:0; }
+  section { background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:18px 22px; margin:0 0 22px; }
+  section h2 { margin:0 0 2px; color:var(--navy); font-size:18px; }
+  .src { font-size:12px; color:#94a3b8; margin-bottom:10px; }
+  section h3 { font-size:14px; color:var(--teal); margin:18px 0 6px; }
+  .diagram { background:#fff; border:1px dashed #dbe3ec; border-radius:8px; padding:14px; overflow:auto; }
+  .mermaid { background:#fff; }
+  .mermaid svg { max-width:100%; height:auto; }
+  .err { color:#b91c1c; font-size:12px; background:#fef2f2; border:1px solid #fecaca; padding:8px; border-radius:6px; white-space:pre-wrap; }
+  footer { text-align:center; color:#94a3b8; font-size:12px; padding:20px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Alexandrya — Visor de diagramas</h1>
+  <p>97 diagramas extraídos de la documentación · render local (sin internet)</p>
+</header>
+<div class="layout">
+  <nav><ul><li><a href="#sec0">03 — Actores, Roles y Permisos <span class="cnt">(2)</span></a><div class="path">03-actores/actores.md</div></li>
+<li><a href="#sec1">04 — Módulos y Secciones <span class="cnt">(1)</span></a><div class="path">04-modulos/modulos-secciones.md</div></li>
+<li><a href="#sec2">RF-001: Registro de Usuarios <span class="cnt">(5)</span></a><div class="path">05-requerimientos/RF-001-registro.md</div></li>
+<li><a href="#sec3">RF-001A: Autenticación e Inicio de Sesión <span class="cnt">(5)</span></a><div class="path">05-requerimientos/RF-001A-autenticacion.md</div></li>
+<li><a href="#sec4">RF-001B: Recuperación y Cambio de Contraseña <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-001B-recuperacion-contrasena.md</div></li>
+<li><a href="#sec5">RF-002: Planes y Compra desde la Landing <span class="cnt">(3)</span></a><div class="path">05-requerimientos/RF-002-planes-compra.md</div></li>
+<li><a href="#sec6">RF-003: Páginas Legales (Aviso de Privacidad, T&amp;C, Política de Uso) <span class="cnt">(3)</span></a><div class="path">05-requerimientos/RF-003-paginas-legales.md</div></li>
+<li><a href="#sec7">RF-016: Autenticación Multifactor (MFA) Opcional <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-016-mfa.md</div></li>
+<li><a href="#sec8">RF-020: Contratación de Suscripción (Checkout) <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-020-contratacion-suscripcion.md</div></li>
+<li><a href="#sec9">RF-023: Validación de Pago por Webhook <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-023-webhook-pago.md</div></li>
+<li><a href="#sec10">RF-024: Pagos Recurrentes y Renovación <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-024-renovacion.md</div></li>
+<li><a href="#sec11">RF-030: Catálogo de Contenido Configurable <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-030-catalogo-contenido.md</div></li>
+<li><a href="#sec12">RF-033: Contenido del Reactivo (Enriquecido y Estímulos Compartidos) <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-033-contenido-reactivo.md</div></li>
+<li><a href="#sec13">RF-035: Carga Masiva por Excel <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-035-carga-masiva-excel.md</div></li>
+<li><a href="#sec14">RF-040: Motor de Evaluaciones <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-040-motor-evaluaciones.md</div></li>
+<li><a href="#sec15">RF-042: Simulador con Tiempo <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-042-simulador.md</div></li>
+<li><a href="#sec16">RF-050: Dashboard de Progreso <span class="cnt">(3)</span></a><div class="path">05-requerimientos/RF-050-dashboard-progreso.md</div></li>
+<li><a href="#sec17">RF-060: Visor de Material de Apoyo Protegido <span class="cnt">(3)</span></a><div class="path">05-requerimientos/RF-060-visor-material.md</div></li>
+<li><a href="#sec18">RF-070: Sistema de Referidos <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-070-referidos.md</div></li>
+<li><a href="#sec19">RF-080: Control de Sesión Única <span class="cnt">(5)</span></a><div class="path">05-requerimientos/RF-080-sesion-unica.md</div></li>
+<li><a href="#sec20">RF-090: Notificaciones por Correo (Transaccionales y Reporte Semanal) <span class="cnt">(4)</span></a><div class="path">05-requerimientos/RF-090-notificaciones.md</div></li>
+<li><a href="#sec21">RF-100: Panel Administrativo <span class="cnt">(3)</span></a><div class="path">05-requerimientos/RF-100-panel-administrativo.md</div></li>
+<li><a href="#sec22">RF-110: Protección de Contenido (Anti-piratería) <span class="cnt">(3)</span></a><div class="path">05-requerimientos/RF-110-proteccion-contenido.md</div></li>
+<li><a href="#sec23">CU-001 — Iniciar Sesión <span class="cnt">(1)</span></a><div class="path">07-casos-uso/CU-001-inicio-sesion.md</div></li>
+<li><a href="#sec24">Diagrama — Arquitectura general <span class="cnt">(2)</span></a><div class="path">09-diagramas/01-arquitectura.md</div></li>
+<li><a href="#sec25">Diagrama — Componentes del backend <span class="cnt">(1)</span></a><div class="path">09-diagramas/02-componentes.md</div></li>
+<li><a href="#sec26">Diagrama — Modelo de datos (ERD) <span class="cnt">(1)</span></a><div class="path">09-diagramas/03-modelo-datos-erd.md</div></li>
+<li><a href="#sec27">Diagrama — Flujos de negocio <span class="cnt">(7)</span></a><div class="path">09-diagramas/04-flujos.md</div></li>
+<li><a href="#sec28">13 — Roadmap <span class="cnt">(1)</span></a><div class="path">13-roadmap/roadmap.md</div></li></ul></nav>
+  <main><section id="sec0"><h2>03 — Actores, Roles y Permisos</h2><div class="src">03-actores/actores.md</div>
+<h3>1. Mapa de actores</h3>
+<div class="diagram"><pre class="mermaid">graph TB
+    subgraph Humanos
+        VIS[Visitante]
+        ALU[Alumno]
+        ALV[Alumno suscripción vencida]
+        REF[Referido / Invitado]
+        EDI[Editor de contenido]
+        ADM[Administrador]
+        SOP[Soporte]
+    end
+    subgraph Sistemas
+        PAY[Pasarela de pago]
+        MAIL[Servicio de correo]
+        SCH[Scheduler / Jobs]
+    end
+
+    VIS --&gt;|se registra| ALU
+    REF --&gt;|paga| ALU
+    ALU --&gt;|expira vigencia| ALV
+    ALV --&gt;|renueva| ALU
+    PAY -.webhook.-&gt; SCH
+    SCH -.dispara.-&gt; MAIL</pre></div>
+<h3>4. Estados de la cuenta del alumno</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; NoVerificada: Registro
+    NoVerificada --&gt; Verificada: Confirma correo
+    Verificada --&gt; Activa: Pago confirmado
+    Activa --&gt; Vencida: Expira vigencia
+    Vencida --&gt; Activa: Renovación
+    Activa --&gt; Suspendida: Acción admin (abuso)
+    Suspendida --&gt; Activa: Reactivación admin
+    Verificada --&gt; [*]: Baja
+    Vencida --&gt; [*]: Baja</pre></div>
+</section>
+<section id="sec1"><h2>04 — Módulos y Secciones</h2><div class="src">04-modulos/modulos-secciones.md</div>
+<h3>1. Mapa de módulos</h3>
+<div class="diagram"><pre class="mermaid">graph TB
+    subgraph Público
+        MOD01[MOD-01 Landing pública]
+    end
+    subgraph Cuenta
+        MOD02[MOD-02 Identidad y acceso]
+        MOD03[MOD-03 Suscripción y pagos]
+    end
+    subgraph Aprendizaje
+        MOD04[MOD-04 Catálogo de contenido]
+        MOD05[MOD-05 Evaluaciones]
+        MOD06[MOD-06 Progreso y métricas]
+        MOD07[MOD-07 Material y medios]
+    end
+    subgraph Crecimiento
+        MOD08[MOD-08 Referidos]
+        MOD09[MOD-09 Notificaciones]
+    end
+    subgraph Operación
+        MOD10[MOD-10 Panel administrativo]
+        MOD11[MOD-11 Seguridad y auditoría]
+    end
+
+    MOD01 --&gt; MOD02 --&gt; MOD03 --&gt; MOD04
+    MOD04 --&gt; MOD05 --&gt; MOD06
+    MOD05 --&gt; MOD07
+    MOD02 --&gt; MOD08
+    MOD03 --&gt; MOD09
+    MOD10 -.administra.-&gt; MOD04
+    MOD11 -.protege.-&gt; MOD02</pre></div>
+</section>
+<section id="sec2"><h2>RF-001: Registro de Usuarios</h2><div class="src">05-requerimientos/RF-001-registro.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    V[Visitante] --&gt; R[Formulario de registro]
+    R --&gt; C{¿Datos válidos?}
+    C --&gt;|No| E[Error de validación]
+    C --&gt;|Sí| N[Cuenta NO verificada]
+    N --&gt; M[Correo de verificación]
+    M --&gt; OK[Cuenta verificada]
+    OK --&gt; P[Puede pagar suscripción]
+    R -. opcional .-&gt; REF[Código de referido]</pre></div>
+<h3>5.1 Flujo de registro</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Visitante en registro]) --&gt; A[Captura correo, contraseña, términos]
+    A --&gt; B{¿Anti-bot OK?}
+    B --&gt;|No| Z[❌ Rechazo silencioso]
+    B --&gt;|Sí| C{¿Formato y política OK?}
+    C --&gt;|No| D[❌ Error de validación] --&gt; A
+    C --&gt;|Sí| E{¿Correo ya existe?}
+    E --&gt;|Sí| F[❌ Mensaje genérico anti-enumeración] --&gt; A
+    E --&gt;|No| G[Crea cuenta NO verificada + hash BCrypt]
+    G --&gt; H{¿Código de referido?}
+    H --&gt;|Sí| I[Vincula referido pendiente]
+    H --&gt;|No| J[Continuar]
+    I --&gt; J
+    J --&gt; K[Genera token verificación 24h]
+    K --&gt; L[Encola correo NT-001]
+    L --&gt; M([✅ Mostrar verifica tu correo])</pre></div>
+<h3>5.2 Secuencia</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    actor V as Visitante
+    participant C as Cliente Web/App
+    participant API as API
+    participant DB as PostgreSQL
+    participant MQ as RabbitMQ
+
+    V-&gt;&gt;C: completa formulario
+    C-&gt;&gt;API: POST /api/v1/auth/register
+    API-&gt;&gt;API: valida anti-bot, formato, política
+    API-&gt;&gt;DB: ¿existe email?
+    DB--&gt;&gt;API: no existe
+    API-&gt;&gt;DB: INSERT usuario (no verificado, hash)
+    opt código referido
+        API-&gt;&gt;DB: INSERT referido (estado=registrado)
+    end
+    API-&gt;&gt;MQ: evento registro (NT-001)
+    API--&gt;&gt;C: 201 Created
+    C--&gt;&gt;V: &quot;Verifica tu correo&quot;</pre></div>
+<h3>5.3 Estados de la cuenta tras registro</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; NoVerificada: registro
+    NoVerificada --&gt; Verificada: clic en enlace (&lt; 24h)
+    NoVerificada --&gt; TokenExpirado: pasan 24h
+    TokenExpirado --&gt; NoVerificada: reenviar verificación
+    Verificada --&gt; [*]</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF001[RF-001 Registro] --&gt; RF001A[RF-001A Autenticación]
+    RF001 --&gt; RF020[RF-020 Suscripción]
+    RF001 -. vincula .-&gt; RF070[RF-070 Referidos]
+    RF001 --&gt; DB[(usuarios / tokens_verificacion)]</pre></div>
+</section>
+<section id="sec3"><h2>RF-001A: Autenticación e Inicio de Sesión</h2><div class="src">05-requerimientos/RF-001A-autenticacion.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    subgraph AUTH[&quot;🔐 AUTENTICACIÓN&quot;]
+        A1[Alumno verificado] --&gt; A2[Ingresa credenciales]
+        A2 --&gt; A3[Sistema valida + MFA]
+        A3 --&gt; A4[Sesión única emitida]
+    end
+    subgraph OK[&quot;✅ ACCESO&quot;]
+        B1[Evaluaciones]
+        B2[Material de apoyo]
+        B3[Dashboard de progreso]
+    end
+    subgraph NO[&quot;❌ DENEGADO&quot;]
+        C1[No verificado]
+        C2[Credenciales inválidas]
+        C3[Sin suscripción activa]
+    end
+    AUTH --&gt;|válido| OK
+    AUTH --&gt;|fallo| NO</pre></div>
+<h3>5.1 Flujo de inicio de sesión</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Alumno en login]) --&gt; A[Ingresa correo/contraseña]
+    A --&gt; B{¿Cuenta existe?}
+    B --&gt;|No| C[❌ Credenciales inválidas]
+    C --&gt; A
+    B --&gt;|Sí| D{¿Correo verificado?}
+    D --&gt;|No| E[❌ 403 Verifica tu correo] --&gt; ENDV([Pantalla verificación])
+    D --&gt;|Sí| F{¿Rate limit OK?}
+    F --&gt;|No| G[❌ 429 Bloqueado 15 min] --&gt; ENDB([Esperar])
+    F --&gt;|Sí| H{¿Contraseña correcta?}
+    H --&gt;|No| I[Intentos += 1 + auditar] --&gt; A
+    H --&gt;|Sí| J{¿MFA activo?}
+    J --&gt;|Sí| K{¿2º factor válido?}
+    K --&gt;|No| I
+    K --&gt;|Sí| L[Invalida sesión previa]
+    J --&gt;|No| L
+    L --&gt; M[Crea sesión única + tokens]
+    M --&gt; N[Registra acceso + correo aviso]
+    N --&gt; O([✅ Sesión iniciada])</pre></div>
+<h3>5.2 Diagrama de secuencia</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    actor U as Alumno
+    participant C as Cliente (Web/App)
+    participant API as API (NestJS)
+    participant DB as PostgreSQL
+    participant R as Redis
+    participant MQ as RabbitMQ
+
+    U-&gt;&gt;C: correo + contraseña
+    C-&gt;&gt;API: POST /api/v1/auth/login
+    API-&gt;&gt;DB: SELECT usuario WHERE email
+    DB--&gt;&gt;API: usuario (hash, verificado, estado)
+    alt no verificado
+        API--&gt;&gt;C: 403 Email no verificado
+    else verificado
+        API-&gt;&gt;R: ¿rate limit IP?
+        API-&gt;&gt;API: bcrypt.compare(password, hash)
+        opt MFA activo
+            API--&gt;&gt;C: 401 mfa_required
+            U-&gt;&gt;C: código MFA
+            C-&gt;&gt;API: POST /auth/login (mfa_code)
+        end
+        API-&gt;&gt;R: invalida sesión previa + set sesión activa
+        API-&gt;&gt;DB: INSERT sesion + acceso_historial
+        API-&gt;&gt;MQ: evento nuevo_acceso (NT-002)
+        API--&gt;&gt;C: 200 {access_token, refresh_token, usuario}
+        C--&gt;&gt;U: dashboard
+    end</pre></div>
+<h3>5.3 Estados de la sesión</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Validando: envía credenciales
+    Validando --&gt; Fallida: inválidas
+    Fallida --&gt; Bloqueada: 5 intentos/15min
+    Bloqueada --&gt; Validando: pasados 15 min
+    Validando --&gt; Activa: ✓ credenciales (+MFA)
+    Activa --&gt; Activa: usa access token
+    Activa --&gt; Expirada: pasa 1 h
+    Expirada --&gt; Activa: refresh válido (&lt; 30d)
+    Expirada --&gt; Reautenticar: refresh expirado
+    Activa --&gt; Invalidada: login en otro dispositivo
+    Activa --&gt; Cerrada: logout
+    Invalidada --&gt; [*]
+    Cerrada --&gt; [*]
+    Reautenticar --&gt; [*]</pre></div>
+<h3>14.3 Dependencias del módulo</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF001[RF-001 Registro] --&gt; RF001A[RF-001A Autenticación]
+    RF001A --&gt; RF080[RF-080 Sesión única]
+    RF001A --&gt; RF016[RF-016 MFA]
+    RF001A -. habilita .-&gt; CONTENIDO[Acceso a evaluaciones/material]
+    RF001B[RF-001B Contraseña] -. relacionado .-&gt; RF001A
+    RF001A --&gt; DB[(usuarios / sesiones / audit)]</pre></div>
+</section>
+<section id="sec4"><h2>RF-001B: Recuperación y Cambio de Contraseña</h2><div class="src">05-requerimientos/RF-001B-recuperacion-contrasena.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    subgraph Recuperación
+        A[Olvidé contraseña] --&gt; B[Solicita por correo]
+        B --&gt; C[Enlace con token 1h]
+        C --&gt; D[Define nueva contraseña]
+    end
+    subgraph Cambio
+        E[Alumno autenticado] --&gt; F[Ingresa actual + nueva]
+    end
+    D --&gt; G[Sesiones cerradas + notificación]
+    F --&gt; G</pre></div>
+<h3>5.1 Flujo de recuperación</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Olvidé mi contraseña]) --&gt; A[Ingresa correo]
+    A --&gt; B[Respuesta genérica siempre]
+    B --&gt; C{¿Correo existe y verificado?}
+    C --&gt;|No| Z[No envía nada]
+    C --&gt;|Sí| D[Genera token reset 1h + invalida tokens previos]
+    D --&gt; E[Correo NT-004 con enlace]
+    E --&gt; F[Usuario abre enlace]
+    F --&gt; G{¿Token válido y vigente?}
+    G --&gt;|No| H[❌ 410 Solicita uno nuevo]
+    G --&gt;|Sí| I[Define nueva contraseña + política]
+    I --&gt; J[Actualiza hash + marca token usado]
+    J --&gt; K[Invalida TODAS las sesiones]
+    K --&gt; L[Correo NT-003 + a login]
+    L --&gt; END([✅ Contraseña restablecida])</pre></div>
+<h3>5.2 Secuencia de cambio autenticado</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    actor A as Alumno
+    participant API as API
+    participant DB as PostgreSQL
+    participant R as Redis
+    participant MQ as RabbitMQ
+
+    A-&gt;&gt;API: POST /auth/password/change (actual, nueva) + Bearer
+    API-&gt;&gt;DB: verifica contraseña actual (BCrypt)
+    alt actual incorrecta
+        API--&gt;&gt;A: 401 contraseña_actual_invalida
+    else correcta
+        API-&gt;&gt;DB: UPDATE password_hash
+        API-&gt;&gt;DB: invalida todas las sesiones
+        API-&gt;&gt;R: purga sesiones en caché
+        API-&gt;&gt;MQ: evento cambio_contraseña (NT-003)
+        API--&gt;&gt;A: 200 (debe reautenticar)
+    end</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF001[RF-001 Registro] --&gt; RF001B[RF-001B Contraseña]
+    RF001B --&gt; RF080[RF-080 Sesión única]
+    RF001B -. relacionado .-&gt; RF001A[RF-001A Autenticación]
+    RF001B --&gt; DB[(usuarios / tokens_reset / sesiones)]</pre></div>
+</section>
+<section id="sec5"><h2>RF-002: Planes y Compra desde la Landing</h2><div class="src">05-requerimientos/RF-002-planes-compra.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    V[Visitante] --&gt; P[Ve planes]
+    P --&gt; CTA[Clic Suscribirme]
+    CTA --&gt; A{¿Tiene cuenta?}
+    A --&gt;|No| R[Registro RF-001]
+    A --&gt;|Sí| L[Login RF-001A]
+    R --&gt; CK[Checkout RF-020]
+    L --&gt; CK</pre></div>
+<h3>5.1 Flujo de selección de plan</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Visitante en landing]) --&gt; A[Ve sección Planes]
+    A --&gt; B[Clic Suscribirme]
+    B --&gt; C{¿Autenticado?}
+    C --&gt;|No, sin cuenta| D[Registro RF-001]
+    C --&gt;|No, con cuenta| E[Login RF-001A]
+    C --&gt;|Sí| F[Checkout RF-020]
+    D --&gt; G[Verifica correo]
+    G --&gt; F
+    E --&gt; F
+    F --&gt; END([Inicia compra])</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF002[RF-002 Planes] --&gt; RF001[RF-001 Registro]
+    RF002 --&gt; RF020[RF-020 Suscripción]
+    RF002 --&gt; DB[(planes)]</pre></div>
+</section>
+<section id="sec6"><h2>RF-003: Páginas Legales (Aviso de Privacidad, T&amp;C, Política de Uso)</h2><div class="src">05-requerimientos/RF-003-paginas-legales.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    JUR[Área jurídica] --&gt;|redacta/actualiza| DOC[Documentos legales versionados]
+    DOC --&gt; LP[Landing pública RF-002]
+    DOC --&gt; REG[Aceptación en registro RF-001]
+    REG --&gt; LOG[Registro de consentimiento]
+    LOG --&gt; AUD[Auditoría/cumplimiento]</pre></div>
+<h3>5.1 Publicación y consentimiento</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Jurídico entrega texto]) --&gt; A[Admin crea nueva versión del documento]
+    A --&gt; B[Publica con fecha de vigencia]
+    B --&gt; C[Visible en landing + registro]
+    C --&gt; D{Usuario se registra}
+    D --&gt; E[Acepta T&amp;C/Aviso versión vigente]
+    E --&gt; F[Registra consentimiento: usuario, doc, versión, fecha]
+    F --&gt; END([Consentimiento trazable])</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF003[RF-003 Páginas legales] --&gt; RF001[RF-001 Registro: consentimiento]
+    RF003 --&gt; RF002[RF-002 Landing]
+    RF003 --&gt; DB[(documentos_legales / consentimientos)]</pre></div>
+</section>
+<section id="sec7"><h2>RF-016: Autenticación Multifactor (MFA) Opcional</h2><div class="src">05-requerimientos/RF-016-mfa.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    A[Login: correo+contraseña OK] --&gt; B{¿MFA activo?}
+    B --&gt;|No| OK[Sesión]
+    B --&gt;|Sí| C[Solicita código TOTP]
+    C --&gt; D{¿Válido?}
+    D --&gt;|Sí| OK
+    D --&gt;|No| E[Denegado]</pre></div>
+<h3>5.1 Activación de MFA</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Alumno activa MFA]) --&gt; A[Servidor genera secreto TOTP]
+    A --&gt; B[Muestra QR + secreto]
+    B --&gt; C[Alumno escanea e ingresa un código]
+    C --&gt; D{¿Código válido?}
+    D --&gt;|No| C
+    D --&gt;|Sí| E[Activa MFA + genera códigos de respaldo]
+    E --&gt; END([MFA activo])</pre></div>
+<h3>5.2 Login con MFA</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    actor A as Alumno
+    participant API as API
+    A-&gt;&gt;API: POST /auth/login (correo+contraseña)
+    API-&gt;&gt;API: valida contraseña (RF-001A)
+    API--&gt;&gt;A: 401 mfa_required
+    A-&gt;&gt;API: POST /auth/login (+ mfa_code o backup_code)
+    API-&gt;&gt;API: verifica TOTP/respaldo
+    API--&gt;&gt;A: 200 tokens (crea sesión única)</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF001A[RF-001A Autenticación] --&gt; RF016[RF-016 MFA]
+    RF016 --&gt; RF080[RF-080 Sesión única]
+    RF016 --&gt; DB[(mfa_secretos / mfa_codigos_respaldo)]</pre></div>
+</section>
+<section id="sec8"><h2>RF-020: Contratación de Suscripción (Checkout)</h2><div class="src">05-requerimientos/RF-020-contratacion-suscripcion.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    A[Alumno verificado] --&gt; CK[Checkout]
+    CK --&gt; PAY[Pasarela]
+    PAY --&gt;|tarjeta| TJ[Cobro inmediato]
+    PAY --&gt;|SPEI| SP[Referencia diferida]
+    TJ -.webhook.-&gt; ACT[Activación RF-023]
+    SP -.webhook acreditación.-&gt; ACT
+    ACT --&gt; S[Suscripción activa 365d]</pre></div>
+<h3>5.1 Flujo de checkout</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Alumno elige plan]) --&gt; A{¿Suscripción ya activa?}
+    A --&gt;|Sí| R[Sugerir renovación RF-024]
+    A --&gt;|No| B[Crea orden estado=pendiente]
+    B --&gt; C[Crea sesión de pago en pasarela]
+    C --&gt; D{Método}
+    D --&gt;|Tarjeta| E[Captura datos en pasarela]
+    D --&gt;|SPEI| F[Genera referencia/CLABE]
+    E --&gt; G[Espera webhook RF-023]
+    F --&gt; G
+    G --&gt; END([Orden pendiente, esperando confirmación])</pre></div>
+<h3>5.2 Secuencia</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    actor A as Alumno
+    participant W as Web
+    participant API as API
+    participant DB as PostgreSQL
+    participant PAY as Pasarela
+
+    A-&gt;&gt;W: clic Pagar (plan)
+    W-&gt;&gt;API: POST /checkout {plan_id, metodo}
+    API-&gt;&gt;DB: crea pago estado=pendiente (idempotency_key)
+    API-&gt;&gt;PAY: crea sesión/intención de pago
+    PAY--&gt;&gt;API: payment_intent / referencia
+    API--&gt;&gt;W: datos de pago (redirect / CLABE)
+    W--&gt;&gt;A: completa pago en la pasarela
+    Note over API,PAY: La activación ocurre por webhook (RF-023)</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF002[RF-002 Planes] --&gt; RF020[RF-020 Checkout]
+    RF020 --&gt; RF023[RF-023 Webhook]
+    RF020 -. si activa .-&gt; RF024[RF-024 Renovación]
+    RF023 --&gt; RF070[RF-070 Beneficio referido]
+    RF020 --&gt; DB[(pagos / suscripciones)]</pre></div>
+</section>
+<section id="sec9"><h2>RF-023: Validación de Pago por Webhook</h2><div class="src">05-requerimientos/RF-023-webhook-pago.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    PAY[Pasarela] --&gt;|webhook firmado| WH[Endpoint webhook]
+    WH --&gt; V{¿Firma válida?}
+    V --&gt;|No| X[Descartar + alerta]
+    V --&gt;|Sí| IDEM{¿Ya procesado?}
+    IDEM --&gt;|Sí| OK1[200 OK sin efecto]
+    IDEM --&gt;|No| P[Procesa evento]
+    P --&gt; ACT[Activa/extiende suscripción]
+    ACT --&gt; N[NT-005 Pago exitoso]
+    ACT --&gt; REF[Evalúa beneficio referido]</pre></div>
+<h3>5.1 Procesamiento del webhook</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([POST /webhooks/payment]) --&gt; A{¿Firma válida?}
+    A --&gt;|No| B[401 + alerta seguridad]
+    A --&gt;|Sí| C[Calcula payload_hash]
+    C --&gt; D{¿Evento ya procesado?}
+    D --&gt;|Sí| E[200 OK sin efecto]
+    D --&gt;|No| F[Persiste evento]
+    F --&gt; G{Tipo de evento}
+    G --&gt;|confirmado| H[Activa/extiende suscripción]
+    G --&gt;|fallido| I[Marca pago fallido]
+    G --&gt;|reembolsado| J[Suspende suscripción]
+    H --&gt; K[Encola NT-005 + evalúa referido RF-070]
+    I --&gt; L[Encola NT-012]
+    J --&gt; M[Encola NT-007]
+    K --&gt; END([200 OK])
+    L --&gt; END
+    M --&gt; END</pre></div>
+<h3>5.2 Estados del pago (referencia)</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Pendiente
+    Pendiente --&gt; Confirmado: webhook confirmado
+    Pendiente --&gt; Fallido: webhook fallido
+    Confirmado --&gt; Reembolsado: webhook reembolso
+    Fallido --&gt; [*]
+    Confirmado --&gt; [*]
+    Reembolsado --&gt; [*]</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF020[RF-020 Checkout] --&gt; RF023[RF-023 Webhook]
+    RF023 --&gt; RF024[RF-024 Renovación]
+    RF023 --&gt; RF070[RF-070 Beneficio referido]
+    RF023 --&gt; RF090[RF-090 Notificaciones]
+    RF023 --&gt; MQ{{RabbitMQ}}
+    RF023 --&gt; DB[(pagos / eventos_pago)]</pre></div>
+</section>
+<section id="sec10"><h2>RF-024: Pagos Recurrentes y Renovación</h2><div class="src">05-requerimientos/RF-024-renovacion.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    subgraph Anticipada
+        A1[Activa, 30 días restantes] --&gt; A2[Renueva]
+        A2 --&gt; A3[fin += 365 días sobre fin actual]
+    end
+    subgraph Tardía
+        B1[Vencida] --&gt; B2[Renueva]
+        B2 --&gt; B3[fin = hoy + 365 días]
+    end</pre></div>
+<h3>5.1 Cálculo de nueva vigencia</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Pago de renovación confirmado]) --&gt; A{¿Suscripción activa?}
+    A --&gt;|Sí, anticipada| B[nuevo_fin = fin_actual + 365d]
+    A --&gt;|No, vencida| C[nuevo_fin = hoy + 365d]
+    B --&gt; D[estado=activa]
+    C --&gt; D
+    D --&gt; E[Notifica renovación NT-008]
+    E --&gt; END([Vigencia actualizada])</pre></div>
+<h3>5.2 Estados de la suscripción (renovación)</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    Activa --&gt; Activa: renovación anticipada (extiende)
+    Vencida --&gt; Activa: renovación tardía (reinicia 365d)
+    Activa --&gt; Vencida: vence (RF-025)
+    note right of Activa
+        Recurrencia opcional puede
+        renovar automáticamente antes del fin.
+    end note</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF020[RF-020 Checkout] --&gt; RF024[RF-024 Renovación]
+    RF023[RF-023 Webhook] --&gt; RF024
+    RF024 --&gt; RF025[RF-025 Suspensión]
+    RF024 --&gt; RF026[RF-026 Avisos]
+    RF024 --&gt; DB[(suscripciones / pagos)]</pre></div>
+</section>
+<section id="sec11"><h2>RF-030: Catálogo de Contenido Configurable</h2><div class="src">05-requerimientos/RF-030-catalogo-contenido.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    M[Materia] --&gt; MO[Módulo]
+    MO --&gt; T[Tema]
+    T --&gt; ST[Subtema]
+    T --&gt; P[Banco de preguntas]
+    ST --&gt; P
+    P --&gt; EV[Alimenta evaluaciones RF-040]</pre></div>
+<h3>5.1 Alta de contenido</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Editor en panel]) --&gt; A[Crear/editar materia]
+    A --&gt; B[Agregar módulos]
+    B --&gt; C[Agregar temas]
+    C --&gt; D[Agregar subtemas opcionales]
+    D --&gt; E[Cargar preguntas al banco]
+    E --&gt; F{¿Pregunta válida?}
+    F --&gt;|No| G[Bloquear publicación RNA-020]
+    F --&gt;|Sí| H[Publicada y disponible]
+    H --&gt; END([Disponible para evaluaciones])</pre></div>
+<h3>5.2 Borrado lógico</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    Activo --&gt; Inactivo: desactivar
+    Inactivo --&gt; Activo: reactivar
+    note right of Inactivo
+        No se elimina físicamente
+        si tiene intentos (RN-006).
+    end note</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF030[RF-030 Catálogo] --&gt; RF035[RF-035 Carga Excel]
+    RF030 --&gt; RF040[RF-040 Evaluaciones]
+    RF030 --&gt; DB[(materias/modulos/temas/subtemas/preguntas)]</pre></div>
+</section>
+<section id="sec12"><h2>RF-033: Contenido del Reactivo (Enriquecido y Estímulos Compartidos)</h2><div class="src">05-requerimientos/RF-033-contenido-reactivo.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    EST[Estímulo: lectura/caso/imagen] --&gt; R1[Reactivo 1]
+    EST --&gt; R2[Reactivo 2]
+    EST --&gt; R3[Reactivo 3]
+    R1 --&gt; O1[&quot;Opciones: texto | fórmula | imagen&quot;]
+    subgraph Render
+        LATEX[LaTeX/MathML] --&gt; UI[Visor renderiza]
+        MD[Markdown] --&gt; UI
+        IMG[Imagen] --&gt; UI
+    end</pre></div>
+<h3>5.1 Modelo de contenido</h3>
+<div class="diagram"><pre class="mermaid">erDiagram
+    ESTIMULO ||--o{ PREGUNTA : &quot;agrupa (0..N)&quot;
+    PREGUNTA ||--|{ OPCION : &quot;4 opciones&quot;
+    ESTIMULO {
+        uuid id PK
+        string tipo &quot;lectura|caso|imagen|grafico&quot;
+        text contenido
+        string formato &quot;markdown|html|latex&quot;
+    }
+    PREGUNTA {
+        uuid id PK
+        uuid estimulo_id FK &quot;nullable&quot;
+        text enunciado
+        string formato_enunciado
+        int orden
+    }
+    OPCION {
+        uuid id PK
+        text contenido
+        string formato &quot;texto|markdown|latex|html&quot;
+        string imagen_url &quot;nullable&quot;
+        bool es_correcta
+    }</pre></div>
+<h3>5.2 Renderizado seguro</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    A[Contenido + formato] --&gt; B{Formato}
+    B --&gt;|texto| T[Escapar y mostrar]
+    B --&gt;|markdown| M[Markdown -&gt; HTML sanitizado]
+    B --&gt;|latex| L[KaTeX/MathJax render]
+    B --&gt;|html| H[Sanitizar allowlist -&gt; mostrar]
+    T --&gt; OUT[Visor]
+    M --&gt; OUT
+    L --&gt; OUT
+    H --&gt; OUT</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF033[RF-033 Contenido del reactivo] --&gt; RF030[RF-030 Catálogo]
+    RF033 --&gt; RF040[RF-040 Evaluaciones]
+    RF033 --&gt; RF035[RF-035 Carga Excel]
+    RF033 --&gt; RF060[RF-060 Material/medios]
+    RF033 --&gt; DB[(estimulos / preguntas / opciones)]</pre></div>
+</section>
+<section id="sec13"><h2>RF-035: Carga Masiva por Excel</h2><div class="src">05-requerimientos/RF-035-carga-masiva-excel.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    E[Editor] --&gt; U[Sube Excel]
+    U --&gt; P[Parser valida estructura]
+    P --&gt; R{Por fila}
+    R --&gt;|válida| OK[Importa]
+    R --&gt;|inválida| ERR[Acumula error]
+    OK --&gt; REP[Reporte de resultados]
+    ERR --&gt; REP
+    REP --&gt; CAT[Catálogo actualizado RF-030]</pre></div>
+<h3>5.1 Flujo de importación</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Editor sube Excel]) --&gt; A{¿Estructura válida?}
+    A --&gt;|No| B[❌ Rechazo total + formato esperado RNA-022]
+    A --&gt;|Sí| C[Itera filas]
+    C --&gt; D{¿Fila válida?}
+    D --&gt;|Sí| E[Inserta/actualiza en transacción de fila]
+    D --&gt;|No| F[Registra error de fila]
+    E --&gt; G{¿Más filas?}
+    F --&gt; G
+    G --&gt;|Sí| C
+    G --&gt;|No| H[Genera reporte: N importadas, M con error]
+    H --&gt; END([Reporte descargable])</pre></div>
+<h3>5.2 Estados de la importación</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Subido
+    Subido --&gt; Validando: parse estructura
+    Validando --&gt; Rechazado: estructura inválida
+    Validando --&gt; Procesando: estructura ok
+    Procesando --&gt; Completado: con reporte (parcial o total)
+    Rechazado --&gt; [*]
+    Completado --&gt; [*]</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF030[RF-030 Catálogo] --&gt; RF035[RF-035 Carga Excel]
+    RF035 --&gt; RF040[RF-040 Evaluaciones]
+    RF035 --&gt; MQ{{RabbitMQ}}
+    RF035 --&gt; DB[(importaciones / preguntas)]</pre></div>
+</section>
+<section id="sec14"><h2>RF-040: Motor de Evaluaciones</h2><div class="src">05-requerimientos/RF-040-motor-evaluaciones.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    CFG[Config evaluación RF-041] --&gt; ARM[Arma preguntas del banco]
+    ARM --&gt; EXE[Alumno responde]
+    EXE --&gt; CAL[Califica RN-054]
+    CAL --&gt; FB[Retroalimentación + explicación]
+    CAL --&gt; REG[Registra intento RF-044]
+    REG --&gt; PROG[Progreso RF-050]</pre></div>
+<h3>5.1 Flujo de evaluación</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Alumno inicia evaluación]) --&gt; A{¿Suscripción activa?}
+    A --&gt;|No| B[❌ Redirige a suscripción RN-010]
+    A --&gt;|Sí| C[Resuelve alcance según tipo]
+    C --&gt; D{¿Hay preguntas suficientes?}
+    D --&gt;|No| E[Avisar/Bloquear RNA-032]
+    D --&gt;|Sí| F[Selecciona N preguntas activas]
+    F --&gt; G[Crea intento iniciado]
+    G --&gt; H[Presenta preguntas sin marcar correcta]
+    H --&gt; I[Alumno responde]
+    I --&gt; J{¿Feedback inmediato?}
+    J --&gt;|Sí| K[Muestra correcto/incorrecto + explicación]
+    J --&gt;|No| L[Continúa]
+    K --&gt; M{¿Última?}
+    L --&gt; M
+    M --&gt;|No| H
+    M --&gt;|Sí| N[Califica + registra intento RF-044]
+    N --&gt; O[Muestra resultado]
+    O --&gt; END([Fin])</pre></div>
+<h3>5.2 Estados del intento</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Iniciado: crea intento
+    Iniciado --&gt; EnCurso: responde preguntas
+    EnCurso --&gt; Finalizado: envía/última pregunta
+    EnCurso --&gt; Abandonado: inactividad/cierre (se conserva progreso)
+    Abandonado --&gt; EnCurso: reanuda (si config lo permite)
+    Finalizado --&gt; [*]</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF030[RF-030 Catálogo] --&gt; RF040[RF-040 Evaluaciones]
+    RF041[RF-041 Config] --&gt; RF040
+    RF040 --&gt; RF042[RF-042 Simulador]
+    RF040 --&gt; RF044[RF-044 Registro intento]
+    RF040 --&gt; RF050[RF-050 Progreso]
+    RF040 --&gt; DB[(intentos / respuestas_intento)]</pre></div>
+</section>
+<section id="sec15"><h2>RF-042: Simulador con Tiempo</h2><div class="src">05-requerimientos/RF-042-simulador.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    CFG[Config simulador: N preguntas + tiempo] --&gt; EXE[Ejecución con cronómetro]
+    EXE --&gt;|termina antes| FIN[Finaliza manual]
+    EXE --&gt;|tiempo agotado| AUTO[Cierre automático]
+    FIN --&gt; CAL[Califica lo respondido]
+    AUTO --&gt; CAL
+    CAL --&gt; RES[Resultado + explicaciones]</pre></div>
+<h3>5.1 Flujo con temporizador</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Inicia simulador]) --&gt; A[Servidor fija expira_en = now + tiempo]
+    A --&gt; B[Presenta preguntas]
+    B --&gt; C[Alumno responde y avanza]
+    C --&gt; D[Autoguardado de respuesta]
+    D --&gt; E{¿now &gt;= expira_en?}
+    E --&gt;|Sí| F[Cierre automático]
+    E --&gt;|No| G{¿Última o finaliza?}
+    G --&gt;|No| B
+    G --&gt;|Sí| H[Finaliza manual]
+    F --&gt; I[Califica lo respondido]
+    H --&gt; I
+    I --&gt; END([Resultado])</pre></div>
+<h3>5.2 Estados del intento de simulador</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; EnCurso: inicia (expira_en fijado)
+    EnCurso --&gt; Finalizado: finaliza manual (antes de expira_en)
+    EnCurso --&gt; CerradoPorTiempo: now &gt;= expira_en
+    EnCurso --&gt; EnCurso: reanuda con tiempo restante real
+    Finalizado --&gt; [*]
+    CerradoPorTiempo --&gt; [*]</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF040[RF-040 Motor] --&gt; RF042[RF-042 Simulador]
+    RF041[RF-041 Config] --&gt; RF042
+    RF042 --&gt; RF044[RF-044 Registro intento]
+    RF042 --&gt; DB[(intentos.expira_en)]</pre></div>
+</section>
+<section id="sec16"><h2>RF-050: Dashboard de Progreso</h2><div class="src">05-requerimientos/RF-050-dashboard-progreso.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    INT[Intentos RF-044] --&gt; AGG[Agregación de métricas]
+    AGG --&gt; GEN[Avance general]
+    AGG --&gt; MAT[Avance por materia]
+    AGG --&gt; TEMA[Fuertes / débiles RF-051]
+    TEMA --&gt; REC[Recomendaciones RF-052]
+    AGG --&gt; HIST[Historial RF-053]</pre></div>
+<h3>5.1 Cálculo de métricas</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Abre dashboard]) --&gt; A[Lee intentos finalizados del alumno]
+    A --&gt; B[Calcula % aciertos por tema]
+    B --&gt; C[Agrega por materia]
+    C --&gt; D[Avance general ponderado]
+    B --&gt; E{¿% tema &lt; umbral?}
+    E --&gt;|Sí| F[Tema débil → área de oportunidad]
+    E --&gt;|No| G[Tema fuerte]
+    F --&gt; H[Genera recomendación RF-052]
+    D --&gt; VIEW[Render dashboard]
+    G --&gt; VIEW
+    H --&gt; VIEW</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF044[RF-044 Registro intento] --&gt; RF050[RF-050 Dashboard]
+    RF040[RF-040 Evaluaciones] --&gt; RF044
+    RF050 --&gt; RF051[RF-051 Áreas]
+    RF050 --&gt; RF052[RF-052 Recomendaciones]
+    RF050 --&gt; RF091[RF-091 Reporte semanal]
+    RF050 --&gt; DB[(intentos / respuestas_intento)]</pre></div>
+</section>
+<section id="sec17"><h2>RF-060: Visor de Material de Apoyo Protegido</h2><div class="src">05-requerimientos/RF-060-visor-material.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    A[Alumno con suscripción] --&gt; V[Abre material]
+    V --&gt; API[Solicita URL firmada]
+    API --&gt; CHK{¿Sesión + suscripción válidas?}
+    CHK --&gt;|No| X[Denegado]
+    CHK --&gt;|Sí| URL[URL temporal con watermark]
+    URL --&gt; CDN[(CDN/S3)]
+    CDN --&gt; VIS[Reproductor embebido]</pre></div>
+<h3>5.1 Entrega de medio</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    actor A as Alumno
+    participant C as Cliente
+    participant API as API
+    participant S3 as S3/CDN
+
+    A-&gt;&gt;C: abre material de una pregunta
+    C-&gt;&gt;API: GET /media/{id}/url
+    API-&gt;&gt;API: valida sesión + suscripción activa
+    API-&gt;&gt;API: genera URL firmada (exp corta) + watermark token
+    API--&gt;&gt;C: { url, expira_en }
+    C-&gt;&gt;S3: GET url firmada
+    S3--&gt;&gt;C: stream del medio
+    C--&gt;&gt;A: reproductor embebido (sin descarga)</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF060[RF-060 Visor] --&gt; RF062[RF-062 URLs firmadas]
+    RF060 --&gt; RF110[RF-110 Protección]
+    RF060 --&gt; RF111[RF-111 Watermark]
+    RF060 --&gt; S3[(S3/CDN)]</pre></div>
+</section>
+<section id="sec18"><h2>RF-070: Sistema de Referidos</h2><div class="src">05-requerimientos/RF-070-referidos.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    A[Alumno] --&gt; COD[Código único]
+    COD --&gt; SHARE[Comparte]
+    SHARE --&gt; B[Invitado se registra con código]
+    B --&gt; PAGO[Invitado paga RF-023]
+    PAGO --&gt; EF[Referido efectivo]
+    EF --&gt; BEN[Otorga beneficio por posición RF-072]</pre></div>
+<h3>5.1 Ciclo de un referido</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Registrado: invitado usa código (RF-001)
+    Registrado --&gt; Efectivo: invitado paga (RF-023)
+    Registrado --&gt; Expirado: nunca paga
+    Efectivo --&gt; Beneficiado: se otorga beneficio (idempotente)
+    Beneficiado --&gt; [*]
+    Expirado --&gt; [*]</pre></div>
+<h3>5.2 Otorgamiento de beneficio</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Webhook pago confirmado del invitado]) --&gt; A{¿Tiene referidor?}
+    A --&gt;|No| Z[Fin]
+    A --&gt;|Sí| B{¿Auto-referido?}
+    B --&gt;|Sí| X[Rechaza RN-044]
+    B --&gt;|No| C{¿Posición &lt;= 3?}
+    C --&gt;|No| Y[Sin beneficio adicional RN-040]
+    C --&gt;|Sí| D{¿Beneficio ya otorgado?}
+    D --&gt;|Sí| E[Idempotente, no repite]
+    D --&gt;|No| F[Otorga beneficio por posición RF-072]
+    F --&gt; G[Notifica NT-010]
+    G --&gt; END([Fin])</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF001[RF-001 Registro] -. vincula .-&gt; RF070[RF-070 Referidos]
+    RF023[RF-023 Webhook] --&gt; RF070
+    RF072[RF-072 Config beneficios] --&gt; RF070
+    RF070 --&gt; DB[(codigos_referido / referidos / beneficios_otorgados)]</pre></div>
+</section>
+<section id="sec19"><h2>RF-080: Control de Sesión Única</h2><div class="src">05-requerimientos/RF-080-sesion-unica.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    A[Dispositivo A: sesión activa] --&gt;|login en B| INV[Sesión A invalidada]
+    B[Dispositivo B: nueva sesión] --&gt; ACT[Única sesión activa]
+    INV --&gt; N[Aviso por correo NT-002]
+    A -.siguiente request.-&gt; X[401 sesión_invalida]</pre></div>
+<h3>5.1 Flujo de expulsión</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    START([Login exitoso en dispositivo B]) --&gt; A[Buscar sesión activa del usuario]
+    A --&gt; B{¿Existe sesión activa?}
+    B --&gt;|Sí| C[Marcar activa=false + invalidada_en]
+    C --&gt; D[Purgar de Redis]
+    B --&gt;|No| E[Continuar]
+    D --&gt; F[Crear sesión B como única activa]
+    E --&gt; F
+    F --&gt; G[Emitir tokens con sid de B]
+    G --&gt; H([B activo · A expulsado])</pre></div>
+<h3>5.2 Secuencia de validación en cada request</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    participant A as Dispositivo A (expulsado)
+    participant API as API
+    participant R as Redis
+    participant DB as PostgreSQL
+
+    A-&gt;&gt;API: GET /recurso (Bearer token de A)
+    API-&gt;&gt;API: verifica firma + exp del JWT
+    API-&gt;&gt;R: ¿sesión:sid_A activa?
+    R--&gt;&gt;API: no encontrada / inactiva
+    API-&gt;&gt;DB: confirma sesión sid_A (fallback)
+    DB--&gt;&gt;API: activa=false
+    API--&gt;&gt;A: 401 sesion_invalida</pre></div>
+<h3>5.3 Estados de una sesión</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Activa: login
+    Activa --&gt; Invalidada: login en otro dispositivo
+    Activa --&gt; Cerrada: logout
+    Activa --&gt; Expirada: refresh vence (30d)
+    Activa --&gt; Invalidada: cambio de contraseña (RF-001B)
+    Invalidada --&gt; [*]
+    Cerrada --&gt; [*]
+    Expirada --&gt; [*]</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF001A[RF-001A Autenticación] --&gt; RF080[RF-080 Sesión única]
+    RF001B[RF-001B Contraseña] --&gt; RF080
+    RF080 --&gt; RF083[RF-083 Historial de acceso]
+    RF080 --&gt; REDIS[(Redis)]
+    RF080 --&gt; DB[(sesiones)]</pre></div>
+</section>
+<section id="sec20"><h2>RF-090: Notificaciones por Correo (Transaccionales y Reporte Semanal)</h2><div class="src">05-requerimientos/RF-090-notificaciones.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    EV[Eventos del sistema] --&gt; MQ{{RabbitMQ}}
+    SCH[Scheduler semanal] --&gt; MQ
+    MQ --&gt; W[Worker de notificaciones]
+    W --&gt; TPL[Renderiza plantilla CT-###]
+    TPL --&gt; MAIL[Servicio de correo]
+    MAIL --&gt; LOG[Registro de entrega + reintentos]</pre></div>
+<h3>5.1 Flujo de notificación</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    participant SRC as Origen (evento/scheduler)
+    participant MQ as RabbitMQ
+    participant W as Worker
+    participant MAIL as Servicio de correo
+    participant DB as PostgreSQL
+
+    SRC-&gt;&gt;MQ: publica { tipo: NT-###, payload }
+    MQ-&gt;&gt;W: consume
+    W-&gt;&gt;DB: ¿ya enviada? (idempotencia opcional)
+    W-&gt;&gt;W: renderiza plantilla CT-### con variables
+    W-&gt;&gt;MAIL: envía correo
+    alt éxito
+        MAIL--&gt;&gt;W: ok
+        W-&gt;&gt;DB: registra entrega = enviado
+    else fallo
+        MAIL--&gt;&gt;W: error
+        W-&gt;&gt;DB: registra intento + reintento (backoff)
+    end</pre></div>
+<h3>5.2 Estados de una notificación</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Encolada
+    Encolada --&gt; Enviada: proveedor acepta
+    Encolada --&gt; Reintentando: fallo temporal
+    Reintentando --&gt; Enviada
+    Reintentando --&gt; Fallida: agota reintentos
+    Enviada --&gt; [*]
+    Fallida --&gt; [*]</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF023[RF-023 Webhook] --&gt; RF090[RF-090 Notificaciones]
+    RF050[RF-050 Dashboard] --&gt; RF091[RF-091 Reporte semanal]
+    RF091 --&gt; RF090
+    RF090 --&gt; MQ{{RabbitMQ}}
+    RF090 --&gt; MAIL[Servicio de correo]</pre></div>
+</section>
+<section id="sec21"><h2>RF-100: Panel Administrativo</h2><div class="src">05-requerimientos/RF-100-panel-administrativo.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart TB
+    ADM[Administrador] --&gt; P[Panel]
+    EDI[Editor] --&gt; P
+    SOP[Soporte] --&gt; P
+    P --&gt; U[Usuarios]
+    P --&gt; C[Contenido RF-030/035]
+    P --&gt; PG[Pagos/Suscripciones]
+    P --&gt; R[Referidos RF-072]
+    P --&gt; RP[Reportes RF-102]
+    P --&gt; CFG[Configuración]
+    P -.cada acción.-&gt; AUD[Auditoría]</pre></div>
+<h3>5.1 Acceso por rol</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    LOGIN([Login al panel]) --&gt; ROL{Rol}
+    ROL --&gt;|Administrador| TODO[Acceso total]
+    ROL --&gt;|Editor| CONT[Solo contenido + carga masiva]
+    ROL --&gt;|Soporte| LECT[Lectura usuarios/pagos + reenvío correos]
+    TODO --&gt; AUD[Auditoría]
+    CONT --&gt; AUD
+    LECT --&gt; AUD</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF100[RF-100 Panel] --&gt; RF030[RF-030 Catálogo]
+    RF100 --&gt; RF035[RF-035 Carga Excel]
+    RF100 --&gt; RF072[RF-072 Beneficios]
+    RF100 --&gt; RF101[RF-101 Roles]
+    RF100 --&gt; RF102[RF-102 Reportes]
+    RF100 --&gt; AUD[(auditoria)]</pre></div>
+</section>
+<section id="sec22"><h2>RF-110: Protección de Contenido (Anti-piratería)</h2><div class="src">05-requerimientos/RF-110-proteccion-contenido.md</div>
+<h3>3.2 Contexto del negocio</h3>
+<div class="diagram"><pre class="mermaid">flowchart TB
+    subgraph Capas[&quot;Defensa en capas&quot;]
+        T[Tokenización + URLs temporales]
+        W[Watermark dinámico identificable]
+        D[DRM de video]
+        F[FLAG_SECURE Android]
+        S[Sesión única RF-080]
+    end
+    T --&gt; OBJ[Dificultar fuga]
+    W --&gt; OBJ
+    D --&gt; OBJ
+    F --&gt; OBJ
+    S --&gt; OBJ
+    OBJ --&gt; LIM[⚠️ No garantiza imposibilidad]</pre></div>
+<h3>5.1 Decisión de medida por tipo de contenido</h3>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    A{Tipo de contenido} --&gt;|Video premium| B[DRM + URL temporal + watermark]
+    A --&gt;|PDF/Imagen| C[URL temporal + watermark + sin descarga]
+    A --&gt;|Preguntas/Explicaciones HTML| D[Sesión + rate limit + watermark visual]
+    B --&gt; E[+ FLAG_SECURE en Android]
+    C --&gt; E
+    D --&gt; E</pre></div>
+<h3>14.3 Dependencias</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    RF110[RF-110 Protección] --&gt; RF060[RF-060 Visor]
+    RF110 --&gt; RF062[RF-062 URLs firmadas]
+    RF110 --&gt; RF111[RF-111 Watermark]
+    RF110 --&gt; RF112[RF-112 FLAG_SECURE]
+    RF110 --&gt; RF080[RF-080 Sesión única]</pre></div>
+</section>
+<section id="sec23"><h2>CU-001 — Iniciar Sesión</h2><div class="src">07-casos-uso/CU-001-inicio-sesion.md</div>
+<h3>4. Flujo principal</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    actor A as Alumno
+    participant C as Cliente (Web/App)
+    participant API as API
+    participant R as Redis
+    participant MQ as RabbitMQ
+
+    A-&gt;&gt;C: Ingresa correo y contraseña
+    C-&gt;&gt;API: POST /auth/login
+    API-&gt;&gt;API: Valida credenciales (BCrypt)
+    API-&gt;&gt;API: ¿MFA activo? solicita 2º factor
+    API-&gt;&gt;R: Invalida sesión previa y registra sesión única
+    API-&gt;&gt;API: Emite access + refresh token
+    API-&gt;&gt;MQ: evento nuevo_acceso
+    API--&gt;&gt;C: 200 tokens + perfil
+    C--&gt;&gt;A: Redirige al dashboard</pre></div>
+</section>
+<section id="sec24"><h2>Diagrama — Arquitectura general</h2><div class="src">09-diagramas/01-arquitectura.md</div>
+<h3>1. Diagrama de contexto</h3>
+<div class="diagram"><pre class="mermaid">graph TB
+    subgraph Usuarios
+        V[Visitante]
+        AL[Alumno]
+        ADM[Administrador / Editor]
+    end
+
+    SYS[[&quot;Alexandrya&lt;br/&gt;Plataforma educativa&quot;]]
+
+    subgraph Externos
+        PAY[Pasarela de pago&lt;br/&gt;Stripe / Mercado Pago / SPEI]
+        MAIL[Servicio de correo&lt;br/&gt;transaccional]
+        CDN[CDN + Object Storage]
+    end
+
+    V --&gt;|Navega landing, se registra y paga| SYS
+    AL --&gt;|Estudia, se evalúa, ve progreso| SYS
+    ADM --&gt;|Administra contenido y operación| SYS
+
+    SYS --&gt;|Cobros y webhooks| PAY
+    PAY -.-&gt;|Confirmación de pago| SYS
+    SYS --&gt;|Envía notificaciones y reportes| MAIL
+    SYS --&gt;|Sirve medios protegidos| CDN</pre></div>
+<h3>2. Diagrama de contenedores</h3>
+<div class="diagram"><pre class="mermaid">graph TB
+    subgraph Clientes
+        WEB[&quot;Web pública + Portal alumno&lt;br/&gt;(Next.js / React)&quot;]
+        ADMUI[&quot;Panel administrativo&lt;br/&gt;(Web)&quot;]
+        APP[&quot;App Android&lt;br/&gt;(Flutter)&quot;]
+    end
+
+    LB[&quot;Balanceador de carga&lt;br/&gt;+ API Gateway&quot;]
+
+    subgraph Backend
+        API[&quot;API REST&lt;br/&gt;(NestJS)&quot;]
+        WORKER[&quot;Workers asíncronos&lt;br/&gt;(correo, reportes, webhooks)&quot;]
+    end
+
+    subgraph Datos
+        PG[(&quot;PostgreSQL&lt;br/&gt;datos transaccionales&quot;)]
+        REDIS[(&quot;Redis&lt;br/&gt;caché + sesiones&quot;)]
+        MQ{{&quot;RabbitMQ&lt;br/&gt;colas de eventos&quot;}}
+        S3[(&quot;S3&lt;br/&gt;medios y material&quot;)]
+    end
+
+    subgraph Externos
+        PAY[Pasarela de pago]
+        MAIL[Servicio de correo]
+        CDNX[CDN]
+    end
+
+    WEB --&gt; LB
+    ADMUI --&gt; LB
+    APP --&gt; LB
+    LB --&gt; API
+
+    API --&gt; PG
+    API --&gt; REDIS
+    API --&gt; MQ
+    API --&gt;|URLs firmadas| S3
+    API --&gt; PAY
+
+    MQ --&gt; WORKER
+    WORKER --&gt; MAIL
+    WORKER --&gt; PG
+    PAY -.-&gt;|webhook| API
+
+    S3 --&gt; CDNX
+    CDNX --&gt; WEB
+    CDNX --&gt; APP
+
+    subgraph Observabilidad
+        PROM[Prometheus]
+        GRAF[Grafana]
+        ELK[ELK]
+    end
+    API -.métricas.-&gt; PROM
+    API -.logs.-&gt; ELK
+    PROM --&gt; GRAF</pre></div>
+</section>
+<section id="sec25"><h2>Diagrama — Componentes del backend</h2><div class="src">09-diagramas/02-componentes.md</div>
+<div class="diagram"><pre class="mermaid">graph TB
+    subgraph API[&quot;API REST (NestJS)&quot;]
+        AUTH[&quot;Auth &amp; Sesiones&lt;br/&gt;RF-010..017, RF-080..083&quot;]
+        SUBS[&quot;Suscripciones&lt;br/&gt;RF-020..027&quot;]
+        PAYM[&quot;Pagos&lt;br/&gt;RF-022..024&quot;]
+        CAT[&quot;Catálogo&lt;br/&gt;RF-030..036&quot;]
+        EVAL[&quot;Evaluaciones&lt;br/&gt;RF-040..045&quot;]
+        PROG[&quot;Progreso &amp; Métricas&lt;br/&gt;RF-050..053&quot;]
+        MEDIA[&quot;Material &amp; Medios&lt;br/&gt;RF-060..062, RF-110..112&quot;]
+        REF[&quot;Referidos&lt;br/&gt;RF-070..073&quot;]
+        NOTIF[&quot;Notificaciones&lt;br/&gt;RF-090..091&quot;]
+        ADMIN[&quot;Administración &amp; Reportes&lt;br/&gt;RF-100..102&quot;]
+        AUDIT[&quot;Auditoría&lt;br/&gt;RNF-004&quot;]
+    end
+
+    subgraph Infra
+        PG[(PostgreSQL)]
+        REDIS[(Redis)]
+        MQ{{RabbitMQ}}
+        S3[(S3 / CDN)]
+    end
+
+    subgraph Ext
+        PAY[Pasarela de pago]
+        MAILSVC[Correo]
+    end
+
+    AUTH --&gt; REDIS
+    AUTH --&gt; PG
+    AUTH --&gt; AUDIT
+
+    SUBS --&gt; PG
+    SUBS --&gt; PAYM
+    PAYM --&gt; PAY
+    PAYM --&gt; MQ
+    SUBS --&gt; AUDIT
+
+    CAT --&gt; PG
+    CAT --&gt; REDIS
+    EVAL --&gt; PG
+    EVAL --&gt; CAT
+    PROG --&gt; PG
+    PROG --&gt; EVAL
+
+    MEDIA --&gt; S3
+    MEDIA --&gt; AUTH
+
+    REF --&gt; PG
+    REF --&gt; SUBS
+
+    NOTIF --&gt; MQ
+    MQ --&gt; MAILSVC
+
+    ADMIN --&gt; CAT
+    ADMIN --&gt; SUBS
+    ADMIN --&gt; REF
+    ADMIN --&gt; PG
+    ADMIN --&gt; AUDIT
+
+    AUDIT --&gt; PG</pre></div>
+</section>
+<section id="sec26"><h2>Diagrama — Modelo de datos (ERD)</h2><div class="src">09-diagramas/03-modelo-datos-erd.md</div>
+<div class="diagram"><pre class="mermaid">erDiagram
+    USUARIO ||--o| SUSCRIPCION : tiene
+    USUARIO ||--o{ SESION : abre
+    USUARIO ||--o{ ACCESO_HISTORIAL : registra
+    USUARIO ||--o{ INTENTO : realiza
+    USUARIO ||--o{ PAGO : efectua
+    USUARIO ||--o| CODIGO_REFERIDO : posee
+    USUARIO ||--o{ REFERIDO : refiere
+    USUARIO }o--o| ROL : tiene
+
+    SUSCRIPCION ||--o{ PAGO : se_paga_con
+    PAGO ||--o{ EVENTO_PAGO : genera
+
+    CODIGO_REFERIDO ||--o{ REFERIDO : usa
+    REFERIDO ||--o| BENEFICIO_OTORGADO : produce
+
+    MATERIA ||--o{ MODULO : contiene
+    MODULO ||--o{ TEMA : contiene
+    TEMA ||--o{ SUBTEMA : contiene
+    TEMA ||--o{ PREGUNTA : agrupa
+    SUBTEMA ||--o{ PREGUNTA : agrupa
+    TEMA ||--o{ ESTIMULO : agrupa
+    ESTIMULO ||--o{ PREGUNTA : &quot;agrupa (lectura/caso compartido)&quot;
+    PREGUNTA ||--|{ OPCION : tiene
+    PREGUNTA ||--o{ MATERIAL_APOYO : adjunta
+
+    EVALUACION_CONFIG ||--o{ INTENTO : instancia
+    EVALUACION_CONFIG }o--o{ MATERIA : alcance
+    INTENTO ||--o{ RESPUESTA_INTENTO : contiene
+    RESPUESTA_INTENTO }o--|| PREGUNTA : responde
+    RESPUESTA_INTENTO }o--|| OPCION : elige
+
+    USUARIO ||--o{ AUDITORIA : origina
+
+    USUARIO {
+        uuid id PK
+        string email UK
+        string password_hash
+        bool email_verificado
+        bool mfa_habilitado
+        uuid rol_id FK
+        datetime creado_en
+    }
+    ROL {
+        uuid id PK
+        string nombre &quot;admin|editor|alumno&quot;
+    }
+    SUSCRIPCION {
+        uuid id PK
+        uuid usuario_id FK
+        string estado &quot;activa|vencida|cancelada&quot;
+        datetime inicio_vigencia
+        datetime fin_vigencia
+        datetime creado_en
+    }
+    PAGO {
+        uuid id PK
+        uuid usuario_id FK
+        uuid suscripcion_id FK
+        string metodo &quot;tarjeta|spei|...&quot;
+        decimal monto
+        string moneda &quot;MXN&quot;
+        string estado &quot;pendiente|confirmado|fallido|reembolsado&quot;
+        string ref_pasarela UK
+        datetime creado_en
+    }
+    EVENTO_PAGO {
+        uuid id PK
+        uuid pago_id FK
+        string tipo_webhook
+        string payload_hash UK &quot;idempotencia&quot;
+        datetime recibido_en
+    }
+    SESION {
+        uuid id PK
+        uuid usuario_id FK
+        string refresh_token_hash
+        bool activa &quot;una sola por usuario&quot;
+        string dispositivo
+        datetime creada_en
+    }
+    ACCESO_HISTORIAL {
+        uuid id PK
+        uuid usuario_id FK
+        string ip
+        string dispositivo
+        string ubicacion_aprox
+        datetime fecha_hora
+    }
+    CODIGO_REFERIDO {
+        uuid id PK
+        uuid usuario_id FK
+        string codigo UK
+    }
+    REFERIDO {
+        uuid id PK
+        uuid codigo_referido_id FK
+        uuid usuario_invitado_id FK
+        int posicion &quot;1|2|3&quot;
+        string estado &quot;registrado|efectivo&quot;
+        datetime creado_en
+    }
+    BENEFICIO_OTORGADO {
+        uuid id PK
+        uuid referido_id FK
+        string tipo_beneficio
+        datetime otorgado_en
+    }
+    MATERIA {
+        uuid id PK
+        string nombre
+        bool activa
+        int orden
+    }
+    MODULO {
+        uuid id PK
+        uuid materia_id FK
+        string nombre
+        bool activa
+        int orden
+    }
+    TEMA {
+        uuid id PK
+        uuid modulo_id FK
+        string nombre
+        bool activa
+        int orden
+    }
+    SUBTEMA {
+        uuid id PK
+        uuid tema_id FK
+        string nombre
+        bool activa
+        int orden
+    }
+    ESTIMULO {
+        uuid id PK
+        uuid tema_id FK
+        string tipo &quot;lectura|caso|imagen|grafico&quot;
+        string titulo
+        text contenido &quot;rico: párrafos numerados, notas al pie&quot;
+        string formato &quot;markdown|html|latex&quot;
+        string imagen_url &quot;nullable&quot;
+        bool activo
+    }
+    PREGUNTA {
+        uuid id PK
+        uuid tema_id FK
+        uuid subtema_id FK &quot;nullable&quot;
+        uuid estimulo_id FK &quot;nullable - lectura/caso compartido&quot;
+        text enunciado &quot;texto largo / enriquecido&quot;
+        string formato_enunciado &quot;texto|markdown|latex|html&quot;
+        text descripcion
+        string imagen_url &quot;nullable&quot;
+        string video_url &quot;nullable&quot;
+        text explicacion
+        string formato_explicacion &quot;texto|markdown|latex|html&quot;
+        text tip
+        string dificultad &quot;facil|media|dificil&quot;
+        string categoria
+        int tiempo_estimado_seg
+        int orden &quot;dentro del estímulo&quot;
+        bool activa
+    }
+    OPCION {
+        uuid id PK
+        uuid pregunta_id FK
+        string letra &quot;A|B|C|D&quot;
+        text contenido &quot;texto/fórmula largos&quot;
+        string formato &quot;texto|markdown|latex|html&quot;
+        string imagen_url &quot;nullable - opción con diagrama&quot;
+        bool es_correcta
+    }
+    MATERIAL_APOYO {
+        uuid id PK
+        uuid pregunta_id FK
+        string tipo &quot;video|pdf|imagen|enlace&quot;
+        string url
+    }
+    EVALUACION_CONFIG {
+        uuid id PK
+        string tipo &quot;tema|modulo|materia|general|simulador&quot;
+        int num_preguntas
+        int tiempo_limite_seg &quot;nullable&quot;
+        string modo_feedback &quot;inmediato|final&quot;
+        bool activa
+    }
+    INTENTO {
+        uuid id PK
+        uuid usuario_id FK
+        uuid evaluacion_config_id FK
+        decimal calificacion
+        int tiempo_invertido_seg
+        datetime iniciado_en
+        datetime finalizado_en
+    }
+    RESPUESTA_INTENTO {
+        uuid id PK
+        uuid intento_id FK
+        uuid pregunta_id FK
+        uuid opcion_id FK
+        bool correcta
+    }
+    AUDITORIA {
+        uuid id PK
+        uuid actor_usuario_id FK
+        string accion
+        string entidad
+        string origen_ip
+        datetime fecha_hora
+    }</pre></div>
+</section>
+<section id="sec27"><h2>Diagrama — Flujos de negocio</h2><div class="src">09-diagramas/04-flujos.md</div>
+<h3>1. Registro + pago + activación de suscripción</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    actor V as Visitante
+    participant W as Web (Next.js)
+    participant API as API (NestJS)
+    participant PAY as Pasarela de pago
+    participant MQ as RabbitMQ
+    participant MAIL as Correo
+
+    V-&gt;&gt;W: Registro (correo + contraseña)
+    W-&gt;&gt;API: POST /auth/register
+    API-&gt;&gt;MQ: evento &quot;registro&quot;
+    MQ-&gt;&gt;MAIL: Correo de verificación
+    V-&gt;&gt;API: GET /auth/verify (enlace)
+    API--&gt;&gt;V: Cuenta verificada
+
+    V-&gt;&gt;W: Elige plan y paga
+    W-&gt;&gt;API: POST /checkout
+    API-&gt;&gt;PAY: Crea sesión de pago
+    PAY--&gt;&gt;V: Flujo de pago (tarjeta/SPEI)
+    PAY--&gt;&gt;API: Webhook pago confirmado
+    API-&gt;&gt;API: Idempotencia (RN-021) + activa suscripción 365d (RN-011)
+    API-&gt;&gt;MQ: evento &quot;pago_exitoso&quot;
+    MQ-&gt;&gt;MAIL: Correo de pago exitoso
+    API--&gt;&gt;W: Suscripción activa</pre></div>
+<h3>2. Login con control de sesión única</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    actor AL as Alumno
+    participant CLI as Cliente (Web o App)
+    participant API as API
+    participant R as Redis
+    participant MQ as RabbitMQ
+    participant MAIL as Correo
+
+    AL-&gt;&gt;CLI: Inicia sesión
+    CLI-&gt;&gt;API: POST /auth/login (+ MFA si aplica)
+    API-&gt;&gt;R: ¿Existe sesión activa previa?
+    alt Hay sesión previa
+        API-&gt;&gt;R: Invalida sesión anterior (RN-031)
+    end
+    API-&gt;&gt;R: Registra sesión actual como única
+    API-&gt;&gt;API: Emite JWT + refresh token
+    API-&gt;&gt;MQ: evento &quot;nuevo_acceso&quot; (IP, dispositivo)
+    MQ-&gt;&gt;MAIL: Correo de aviso de acceso (RN-034)
+    API--&gt;&gt;CLI: Tokens + sesión activa
+    Note over CLI,API: El dispositivo anterior queda expulsado al usar su token</pre></div>
+<h3>3. Realizar una evaluación</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    actor AL as Alumno
+    participant CLI as Cliente
+    participant API as API
+    participant DB as PostgreSQL
+
+    AL-&gt;&gt;CLI: Selecciona evaluación (tema/módulo/.../simulador)
+    CLI-&gt;&gt;API: GET /evaluaciones/{config}
+    API-&gt;&gt;API: Valida suscripción activa (RN-010)
+    API-&gt;&gt;DB: Arma preguntas según config (RN-050)
+    API--&gt;&gt;CLI: Set de preguntas (sin respuesta correcta)
+    loop Por cada pregunta
+        AL-&gt;&gt;CLI: Responde opción
+    end
+    CLI-&gt;&gt;API: POST /intentos (respuestas)
+    API-&gt;&gt;API: Califica (RN-054) y, si simulador, valida tiempo (RN-051)
+    API-&gt;&gt;DB: Guarda intento + respuestas (RF-044)
+    API--&gt;&gt;CLI: Calificación + retroalimentación + explicaciones (RF-043)</pre></div>
+<h3>4. Estados de la suscripción</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; SinSuscripcion
+    SinSuscripcion --&gt; Activa: Pago confirmado (RN-020)
+    Activa --&gt; Activa: Renovación anticipada (extiende, RN-013)
+    Activa --&gt; Vencida: Llega fin_vigencia (RN-012)
+    Vencida --&gt; Activa: Renovación tardía (nueva vigencia 365d, RN-014)
+    Activa --&gt; Cancelada: Cancelación / reembolso
+    Cancelada --&gt; Activa: Nuevo pago confirmado
+    Vencida --&gt; [*]
+    Cancelada --&gt; [*]
+    note right of Vencida
+        Cuenta y historial se conservan (RN-015);
+        solo se bloquea el acceso al contenido.
+    end note</pre></div>
+<h3>5. Estados de un pago</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Pendiente: Inicia checkout
+    Pendiente --&gt; Confirmado: Webhook OK (RN-020)
+    Pendiente --&gt; Fallido: Rechazo / timeout
+    Confirmado --&gt; Reembolsado: Reembolso
+    Fallido --&gt; [*]
+    Reembolsado --&gt; [*]
+    Confirmado --&gt; [*]
+    note right of Confirmado
+        Solo Confirmado activa/extiende
+        la suscripción (RN-016).
+    end note</pre></div>
+<h3>6. Referido efectivo y otorgamiento de beneficio</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    actor A as Alumno (refiere)
+    actor B as Invitado
+    participant API as API
+    participant DB as PostgreSQL
+
+    A-&gt;&gt;API: Comparte código de referido (RN-045)
+    B-&gt;&gt;API: Se registra con el código
+    API-&gt;&gt;API: ¿Auto-referido? (RN-044) -&gt; rechaza si aplica
+    API-&gt;&gt;DB: Crea REFERIDO estado=registrado
+    B-&gt;&gt;API: Paga su suscripción
+    API-&gt;&gt;API: ¿Posición &lt;= 3? (RN-040)
+    alt Dentro del límite
+        API-&gt;&gt;DB: REFERIDO -&gt; efectivo (RN-041)
+        API-&gt;&gt;DB: Otorga beneficio configurado, idempotente (RN-042, RN-043)
+    else Excede el límite
+        API-&gt;&gt;API: No otorga beneficio adicional
+    end</pre></div>
+<h3>7. Vencimiento y reporte semanal (jobs programados)</h3>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    participant CRON as Scheduler
+    participant API as API / Worker
+    participant DB as PostgreSQL
+    participant MQ as RabbitMQ
+    participant MAIL as Correo
+
+    CRON-&gt;&gt;API: Job diario de vigencias
+    API-&gt;&gt;DB: Suscripciones por vencer / vencidas
+    API-&gt;&gt;MQ: eventos &quot;por_vencer&quot; / &quot;vencida&quot;
+    MQ-&gt;&gt;MAIL: Correos de aviso (RF-026)
+    API-&gt;&gt;DB: Marca vencidas y suspende acceso (RN-012)
+
+    CRON-&gt;&gt;API: Job semanal de avance
+    API-&gt;&gt;DB: Calcula avance + recomendaciones por alumno
+    API-&gt;&gt;MQ: evento &quot;reporte_semanal&quot;
+    MQ-&gt;&gt;MAIL: Correo con estadísticas (RF-091)</pre></div>
+</section>
+<section id="sec28"><h2>13 — Roadmap</h2><div class="src">13-roadmap/roadmap.md</div>
+<h3>1. Resumen de fases</h3>
+<div class="diagram"><pre class="mermaid">timeline
+    title Roadmap Alexandrya
+    Fase 0 (T0)        : Análisis y diseño : Documentación, arquitectura, UX
+    Fase 1 (MVP)       : Web + Android consumo : Auth, suscripción, catálogo, evaluaciones, progreso
+    Fase 2             : Crecimiento : Referidos avanzados, push, reportes
+    Fase 3             : Escala : iOS, contenido en vivo, analítica avanzada</pre></div>
+</section><footer>Generado desde docs/ · Mermaid local</footer></main>
+</div>
+<script src="_assets/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad:false, theme:'default', securityLevel:'loose', flowchart:{ htmlLabels:true } });
+  (async () => {
+    const nodes = document.querySelectorAll('pre.mermaid');
+    let i = 0;
+    for (const el of nodes) {
+      const code = el.textContent;
+      const id = 'mmd' + (i++);
+      try {
+        const { svg } = await mermaid.render(id, code);
+        const wrap = document.createElement('div');
+        wrap.className = 'diagram-rendered';
+        wrap.innerHTML = svg;
+        el.replaceWith(wrap);
+      } catch (e) {
+        const err = document.createElement('div');
+        err.className = 'err';
+        err.textContent = 'No se pudo renderizar este diagrama:\n' + (e && e.message ? e.message : e) + '\n\n--- código ---\n' + code;
+        el.replaceWith(err);
+      }
+    }
+  })();
+</script>
+</body>
+</html>
