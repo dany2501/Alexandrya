@@ -49,6 +49,7 @@ Inventario **único** de todos los artefactos de Alexandrya y de **cómo se rela
 | 15 | [Base de datos](../15-base-datos/00-indice-base-datos.md) | Persistencia (DDL) |
 | 16 | [APIs y servicios](../16-apis-servicios/00-indice-apis-servicios.md) | Interfaz + servicios (API/SVC) |
 | 17 | **Inventario (este documento)** | Mapa maestro de relaciones |
+| 18 | [Pasarelas de Pago](../18-pagos/propuesta-arquitectura-pagos.md) | Estudio y arquitectura multipasarela |
 
 ---
 

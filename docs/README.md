@@ -29,6 +29,7 @@ La documentación está organizada en carpetas numeradas por tipo de artefacto. 
 | 15 | [`15-base-datos/`](15-base-datos/) | **Scripts DDL consolidados** (PostgreSQL) en orden de dependencias | [00-indice-base-datos.md](15-base-datos/00-indice-base-datos.md) · [scripts/](15-base-datos/scripts/) |
 | 16 | [`16-apis-servicios/`](16-apis-servicios/) | **Catálogo de endpoints y servicios** cruzado con RF, reglas, tablas y mensajes | [00-indice-apis-servicios.md](16-apis-servicios/00-indice-apis-servicios.md) |
 | 17 | [`17-inventario/`](17-inventario/) | **Inventario general** (mapa maestro de todos los artefactos y sus relaciones) | [inventario-general.md](17-inventario/inventario-general.md) |
+| 18 | [`18-pagos/`](18-pagos/) | **Pasarelas de Pago** (Estudio, integración de Conekta y arquitectura multipasarela) | [propuesta-arquitectura-pagos.md](18-pagos/propuesta-arquitectura-pagos.md) · [integracion-conekta.md](18-pagos/integracion-conekta.md) · [estudio_pasarelas_pago_mexico.md](18-pagos/estudio_pasarelas_pago_mexico.md) |
 
 ---
 
